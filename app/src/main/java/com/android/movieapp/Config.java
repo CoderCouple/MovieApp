@@ -25,15 +25,19 @@ public class Config {
     //--------------------------------------------------------------------------------
     // API related constants/configurations - used in ApiModule
     //--------------------------------------------------------------------------------
-    public static final String API_BASE_URL_PRODUCTION = "";
-    public static final String API_BASE_URL_MOCK = "http://todobasic.getsandbox.com/";
+    public static final String API_BASE_URL_PRODUCTION = "https://api.themoviedb.org/3/";
+    public static final String API_BASE_URL_MOCK = "";
+    public static final String API_IMAGE_URL = "http://image.tmdb.org/t/p/w342/";
     // Active base url
-    public static final String API_BASE_URL = API_BASE_URL_MOCK;
+    public static final String API_BASE_URL = API_BASE_URL_PRODUCTION;
 
     // Common http headers required to be added by interceptor
     public static final Map<String, String> API_HEADERS = new HashMap<String, String>() {{
-        put("User-Agent", "AndroidMvp-Todo-App");
+        put("User-Agent", "Android-Movie");
         put("Content-Type", "application/json");
     }};
+
+    //MovieDb Keys
+    public static final String APP_KEY = "845c702a19ceb0992d8987387636667c";
 
 }

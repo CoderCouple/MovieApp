@@ -1,7 +1,7 @@
 package com.android.movieapp.injection.module;
 
 import com.android.movieapp.Config;
-import com.android.movieapp.data.api.TodoService;
+import com.android.movieapp.data.api.MovieDbService;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -38,7 +38,7 @@ public class ApiModule {
 
     @Provides
     @Singleton
-    public TodoService provideApi(
+    public MovieDbService provideApi(
             OkHttpClient client,
             Converter.Factory converterFactory,
             CallAdapter.Factory callAdapterFactory) {
@@ -49,7 +49,7 @@ public class ApiModule {
                 .addCallAdapterFactory(callAdapterFactory)
                 .build();
 
-        return retrofit.create(TodoService.class);
+        return retrofit.create(MovieDbService.class);
     }
 
     @Provides

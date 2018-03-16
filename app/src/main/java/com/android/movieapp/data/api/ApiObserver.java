@@ -1,8 +1,6 @@
 package com.android.movieapp.data.api;
 
-import io.reactivex.Observer;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableObserver;
 import retrofit2.Response;
 
 
@@ -11,7 +9,7 @@ import retrofit2.Response;
  *
  * @author Aaditya Deowanshi
  */
-public abstract class ApiObserver<T extends Response> implements Observer<T> {
+public abstract class ApiObserver<T extends Response> extends DisposableObserver<T> {
 
     /**
      * Publish result to observer.
@@ -25,15 +23,13 @@ public abstract class ApiObserver<T extends Response> implements Observer<T> {
         // Default implementation, can be override accordingly.
     }
 
+
     @Override
     public void onNext(T result) {
         onResponse(result);
     }
 
-    @Override
-    public void onSubscribe(@NonNull Disposable d) {
-        d.dispose();
-    }
-
 }
+
+
 

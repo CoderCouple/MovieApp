@@ -3,11 +3,14 @@ package com.android.movieapp.injection.component;
 import com.android.movieapp.injection.module.ApiModule;
 import com.android.movieapp.injection.module.AppModule;
 import com.android.movieapp.injection.module.CommonModule;
-import com.android.movieapp.injection.module.ReviewModule;
+import com.android.movieapp.injection.module.MovieModule;
 import com.android.movieapp.module.common.util.Bakery;
 import com.android.movieapp.module.common.util.ConnectivityUtil;
 import com.android.movieapp.module.common.util.PreferenceUtil;
-import com.android.movieapp.module.movie.presenter.ReviewPresenterImpl;
+import com.android.movieapp.module.movie.presenter.MoviePresenterImpl;
+import com.android.movieapp.module.movie.view.MovieActivity;
+import com.android.movieapp.module.movie.view.PopularFragment;
+import com.android.movieapp.module.movie.view.UpComingFragment;
 
 import javax.inject.Singleton;
 
@@ -21,7 +24,7 @@ import dagger.Component;
         AppModule.class,
         ApiModule.class,
         CommonModule.class,
-        ReviewModule.class,
+        MovieModule.class,
 })
 public interface AppComponent {
 
@@ -31,7 +34,11 @@ public interface AppComponent {
     void inject(ConnectivityUtil connectivityUtil);
 
 
-    // task module
-    void inject(ReviewPresenterImpl reviewPresenter);
+    // movie module
+    void inject(MoviePresenterImpl moviePresenter);
+    void inject(MovieActivity movieActivity);
+    void inject(PopularFragment popularFragment);
+    void inject(UpComingFragment upComingFragment);
+
 
 }
