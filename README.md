@@ -27,3 +27,10 @@ MovieApp is an android app used to display popular and upcoming movies. You can 
 <img width="450" align="middle" src="https://github.com/iamdeowanshi/MovieApp/blob/master/screenshot/img3.png?raw=true" alt="Detail Screen">
 
 
+## See also
+
+- [Google Android architecture samples] (https://github.com/googlesamples/android-architecture)
+- [Ribot's Android boilerplate] (https://github.com/ribot/android-boilerplate)
+- [Android clean architecture] (https://github.com/android10/Android-CleanArchitecture)
+- [Android MVP] (https://github.com/iamdeowanshi/android-mvp)
+
