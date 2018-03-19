@@ -2,7 +2,6 @@ package com.android.movieapp.injection.module;
 
 import com.android.movieapp.module.common.util.Bakery;
 import com.android.movieapp.module.common.util.ConnectivityUtil;
-import com.android.movieapp.module.common.util.PreferenceUtil;
 
 import javax.inject.Singleton;
 
@@ -16,12 +15,6 @@ import dagger.Provides;
  */
 @Module
 public class CommonModule {
-
-    @Provides
-    @Singleton
-    public PreferenceUtil providePreferenceUtil() {
-        return new PreferenceUtil();
-    }
 
     @Provides
     @Singleton

@@ -3,7 +3,6 @@ package com.android.movieapp.module.movie.view;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +14,7 @@ import com.android.movieapp.injection.Injector;
 import com.android.movieapp.module.base.BaseFragment;
 import com.android.movieapp.module.common.util.Bakery;
 import com.android.movieapp.module.common.util.ConnectivityUtil;
-import com.android.movieapp.module.movie.model.Movie;
+import com.android.movieapp.data.model.Movie;
 import com.android.movieapp.module.movie.model.MovieResponse;
 import com.android.movieapp.module.movie.presenter.MoviePresenter;
 import com.android.movieapp.module.movie.presenter.MovieViewInteractor;
@@ -80,13 +79,10 @@ public class UpComingFragment extends BaseFragment implements MovieViewInteracto
 
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
-        if (savedInstanceState != null) {
-            //probably orientation change
-            movieList = (List<Movie>) savedInstanceState.getSerializable("upComingList");
-        }
-
+        // Load movie data from server.
         if (movieList == null) {
             movieList = new ArrayList<>();
+            // Check for internet connection before making api call.
             if (connectivityUtil.isConnected())
                 moviePresenter.getUpComingMovies(1);
             else {
@@ -100,6 +96,7 @@ public class UpComingFragment extends BaseFragment implements MovieViewInteracto
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
+                // Show or hide tab layout on scroll.
                 switch (newState) {
                     case SCROLL_STATE_IDLE:
                         ((MovieActivity) getActivity()).toggleTabView(View.VISIBLE);
@@ -113,6 +110,7 @@ public class UpComingFragment extends BaseFragment implements MovieViewInteracto
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+                // Pagination implementation on scrolling to end of list
                 if (!(recyclerView.canScrollVertically(1))) {
                     if (movieResponse.getPage() < movieResponse.getTotal_pages()) {
                         if (!connectivityUtil.isConnected()) {
@@ -121,19 +119,11 @@ public class UpComingFragment extends BaseFragment implements MovieViewInteracto
                         }
 
                         moviePresenter.getUpComingMovies(movieResponse.getPage() + 1);
-
                     }
                 }
             }
         });
     }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putSerializable("upComingList", (Serializable) movieList);
-    }
-
 
     @Override
     public void showProgress() {
@@ -147,6 +137,7 @@ public class UpComingFragment extends BaseFragment implements MovieViewInteracto
 
     @Override
     public void onResult(MovieResponse response) {
+        // Clears list add updated data
         this.movieResponse = response;
         Set<Movie> movieSet = new HashSet<>();
         movieSet.addAll(this.movieList);
@@ -154,9 +145,9 @@ public class UpComingFragment extends BaseFragment implements MovieViewInteracto
         this.movieList.clear();
         this.movieList.addAll(movieSet);
         movieAdapter.notifyDataSetChanged();
-
     }
 
+    // Loads detail activity with movie data
     @Override
     public void onMovieClicked(int position) {
         Bundle movie = new Bundle();

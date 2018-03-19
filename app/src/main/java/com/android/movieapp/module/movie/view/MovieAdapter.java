@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.android.movieapp.Config;
 import com.android.movieapp.R;
-import com.android.movieapp.module.movie.model.Movie;
+import com.android.movieapp.data.model.Movie;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -23,6 +23,9 @@ import butterknife.OnClick;
  * Created by aaditya on 3/15/18.
  */
 
+/**
+ * Adapter class to load data in recycler view.
+ */
 class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
 
     private Context context;
@@ -64,6 +67,7 @@ class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
             ButterKnife.bind(this, itemView);
         }
 
+        // Binds data to view.
         private void bindViews(Movie movie) {
             title.setText(movie.getTitle().trim());
             Picasso.get()
@@ -73,14 +77,12 @@ class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
                     .centerCrop()
                     .error(R.drawable.poster_failed_placeholder)
                     .into(posterImage);
-            setGenres(movie.getGenres());
+
+            //Converts list to string
             movieGenres.setText(movie.getGenres().toString().replaceAll("[\\[.\\].\\s+]", ""));
         }
 
-        private void setGenres(List<String> genres) {
-
-        }
-
+        //ItemClick listener
         @OnClick(R.id.container)
         public void onItemClick(View view) {
             itemClickListener.onMovieClicked(getAdapterPosition());

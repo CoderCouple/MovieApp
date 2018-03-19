@@ -5,32 +5,26 @@ import com.android.movieapp.data.api.ApiObserver;
 import com.android.movieapp.data.api.MovieDbService;
 import com.android.movieapp.injection.Injector;
 import com.android.movieapp.module.base.BaseNetworkPresenter;
-import com.android.movieapp.module.movie.model.Movie;
+import com.android.movieapp.module.common.util.Bakery;
 import com.android.movieapp.module.movie.model.MovieResponse;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.reflect.TypeToken;
-
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.List;
 
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
-import okhttp3.ResponseBody;
 import retrofit2.Response;
 
 /**
  * @author Aaditya Deowanshi
  */
+
+/**
+ * Presenter Implementation to call movieDb services
+ */
 public class MoviePresenterImpl extends BaseNetworkPresenter<MovieViewInteractor>
         implements MoviePresenter {
 
     @Inject MovieDbService movieDbService;
-
-    private JsonObject responseDetail;
+    @Inject Bakery bakery;
 
     public MoviePresenterImpl() {
         Injector.component().inject(this);
@@ -45,27 +39,21 @@ public class MoviePresenterImpl extends BaseNetworkPresenter<MovieViewInteractor
 
             @Override
             public void onResponse(Response<MovieResponse> response) {
-                /*try {
-                    responseDetail = (JsonObject) new JsonParser().parse(response.body().string());
-                } catch (IOException e) {
-                    e.printStackTrace();
+                // Checks for response code
+                if (response.code() != 200){
+                    bakery.toastLong(response.message());
+                    return;
                 }
 
-
-                Type listType = new TypeToken<List<Movie>>() {
-                }.getType();
-                List<Movie> movies = new Gson().fromJson(responseDetail.get("results").toString(), listType);*/
-
+                //sends response to activity
                 getViewInteractor().hideProgress();
                 getViewInteractor().onResult(response.body());
             }
 
             @Override
             public void onError(Throwable e) {
-
+                bakery.toastLong(e.getMessage());
             }});
-
-
     }
 
     @Override
@@ -76,23 +64,18 @@ public class MoviePresenterImpl extends BaseNetworkPresenter<MovieViewInteractor
         subscribeForNetwork(upComingMovieObservable, new ApiObserver<Response<MovieResponse>>() {
             @Override
             public void onError(Throwable e) {
-
+                bakery.toastLong(e.getMessage());
             }
 
             @Override
             public void onResponse(Response<MovieResponse> response) {
-
-                /*try {
-                    responseDetail = (JsonObject) new JsonParser().parse(response.body().string());
-                } catch (IOException e) {
-                    e.printStackTrace();
+                // Checks for response code
+                if (response.code() != 200){
+                    bakery.toastLong(response.message());
+                    return;
                 }
 
-
-                Type listType = new TypeToken<List<Movie>>() {
-                }.getType();
-                List<Movie> movies = new Gson().fromJson(responseDetail.get("results").toString(), listType);*/
-
+                //sends response to activity
                 getViewInteractor().hideProgress();
                 getViewInteractor().onResult(response.body());
             }

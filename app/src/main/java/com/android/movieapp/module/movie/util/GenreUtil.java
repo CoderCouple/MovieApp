@@ -18,6 +18,9 @@ import javax.inject.Singleton;
  * Created by aaditya on 3/18/18.
  */
 
+/**
+ * Utility class to read genre name from genre id.
+ */
 public class GenreUtil {
 
     static Map<Integer, String> genreMap = new HashMap<>();

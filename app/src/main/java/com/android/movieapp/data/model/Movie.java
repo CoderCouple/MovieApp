@@ -1,4 +1,4 @@
-package com.android.movieapp.module.movie.model;
+package com.android.movieapp.data.model;
 
 import com.android.movieapp.module.movie.util.GenreUtil;
 import com.google.gson.annotations.Expose;

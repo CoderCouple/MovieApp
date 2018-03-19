@@ -6,7 +6,6 @@ import com.android.movieapp.injection.module.CommonModule;
 import com.android.movieapp.injection.module.MovieModule;
 import com.android.movieapp.module.common.util.Bakery;
 import com.android.movieapp.module.common.util.ConnectivityUtil;
-import com.android.movieapp.module.common.util.PreferenceUtil;
 import com.android.movieapp.module.movie.presenter.MoviePresenterImpl;
 import com.android.movieapp.module.movie.util.NetworkChangeReceiver;
 import com.android.movieapp.module.movie.view.MovieActivity;
@@ -30,7 +29,6 @@ import dagger.Component;
 public interface AppComponent {
 
     // common module
-    void inject(PreferenceUtil preferenceUtil);
     void inject(Bakery bakery);
     void inject(ConnectivityUtil connectivityUtil);
 

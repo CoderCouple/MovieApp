@@ -4,13 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.LayoutManager;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.FrameLayout;
 
 import com.android.movieapp.R;
 import com.android.movieapp.injection.Injector;
@@ -19,24 +13,24 @@ import com.android.movieapp.module.base.BaseActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+/**
+ * Main Activity show popular and upComing movie fragment.
+ */
 public class MovieActivity extends BaseActivity {
 
     @BindView(R.id.navigation)
     BottomNavigationView navigation;
 
-
+    // Listener to load fragments.
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.popular:
-                    //mTextMessage.setText(R.string.popular);
                     loadPopularMovieFragment();
                     return true;
                 case R.id.up_coming:
-                    //mTextMessage.setText(R.string.upComing);
                     loadUpComingMovieFragment();
                     return true;
             }
@@ -55,13 +49,8 @@ public class MovieActivity extends BaseActivity {
         loadPopularMovieFragment();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-    }
-
     public void loadPopularMovieFragment() {
+        // Loads Popular fragment in container.
         FragmentManager manager = getSupportFragmentManager();
         PopularFragment popularFragment = (PopularFragment) getSupportFragmentManager().findFragmentByTag("popular");
         if (popularFragment == null) {
@@ -70,6 +59,8 @@ public class MovieActivity extends BaseActivity {
         }
 
         manager.beginTransaction().show(popularFragment).commit();
+
+        // Hide Upcoming fragment if Popular fragment is loaded
         UpComingFragment upComingFragment = (UpComingFragment) getSupportFragmentManager().findFragmentByTag("upComing");
 
         if (upComingFragment != null)
@@ -77,6 +68,7 @@ public class MovieActivity extends BaseActivity {
     }
 
     public void loadUpComingMovieFragment() {
+        // Loads Upcoming fragment in container.
         FragmentManager manager = getSupportFragmentManager();
         UpComingFragment upComingFragment = (UpComingFragment) getSupportFragmentManager().findFragmentByTag("upComing");
         if (upComingFragment == null) {
@@ -85,12 +77,17 @@ public class MovieActivity extends BaseActivity {
         }
         manager.beginTransaction().show(upComingFragment).commit();
 
+        // Hide Popular fragment if Upcoming fragment is loaded
         PopularFragment popularFragment = (PopularFragment) getSupportFragmentManager().findFragmentByTag("popular");
 
         if (popularFragment != null)
             manager.beginTransaction().hide(popularFragment).commit();
     }
 
+    /**
+     * Show and hide tab layout view on scroll.
+     * @param view
+     */
     void toggleTabView(int view) {
         navigation.setVisibility(view);
     }

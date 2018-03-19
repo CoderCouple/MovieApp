@@ -15,6 +15,9 @@ import javax.inject.Inject;
  * Created by aaditya on 3/18/18.
  */
 
+/**
+ * Receiver to handle to netwrok change
+ */
 public class NetworkChangeReceiver extends BroadcastReceiver {
 
     @Inject

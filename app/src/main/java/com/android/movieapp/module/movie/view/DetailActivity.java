@@ -10,13 +10,16 @@ import android.widget.TextView;
 import com.android.movieapp.Config;
 import com.android.movieapp.R;
 import com.android.movieapp.module.base.BaseActivity;
-import com.android.movieapp.module.movie.model.Movie;
+import com.android.movieapp.data.model.Movie;
 import com.ms.square.android.expandabletextview.ExpandableTextView;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+/**
+ * Activity to show detail view
+ */
 public class DetailActivity extends BaseActivity {
 
     @BindView(R.id.back_drop_image)
@@ -49,14 +52,22 @@ public class DetailActivity extends BaseActivity {
         movie = (Movie) getIntent().getExtras().getSerializable("movie");
         setSupportActionBar(toolbar);
 
+        loadToolbar();
+        loadDetails(movie);
+    }
+
+    /**
+     * Loads toolbar
+     */
+    private void loadToolbar() {
+        // Changes color of back arrow icon
         final Drawable upArrow = getResources().getDrawable(R.drawable.abc_ic_ab_back_material);
         upArrow.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
         getSupportActionBar().setHomeAsUpIndicator(upArrow);
+
         getSupportActionBar().setTitle("");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-        loadDetails(movie);
     }
 
     @Override
@@ -70,7 +81,12 @@ public class DetailActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Load details in view from movie data.
+     * @param movie
+     */
     private void loadDetails(Movie movie) {
+        //Set Images using picasso library.
         Picasso.get()
                 .load(Config.BACKDROP_BASE_PATH + movie.getBackDropImage())
                 .placeholder(R.drawable.backdrop_loading_placeholder)
@@ -87,6 +103,6 @@ public class DetailActivity extends BaseActivity {
         originalLanguage.setText(movie.getLanguage());
         voteCount.setText(String.valueOf(movie.getVote_count()));
         releaseDate.setText(movie.getReleaseDate());
-
     }
+
 }

@@ -14,13 +14,12 @@ import com.android.movieapp.injection.Injector;
 import com.android.movieapp.module.base.BaseFragment;
 import com.android.movieapp.module.common.util.Bakery;
 import com.android.movieapp.module.common.util.ConnectivityUtil;
-import com.android.movieapp.module.movie.model.Movie;
+import com.android.movieapp.data.model.Movie;
 import com.android.movieapp.module.movie.model.MovieResponse;
 import com.android.movieapp.module.movie.presenter.MoviePresenter;
 import com.android.movieapp.module.movie.presenter.MovieViewInteractor;
 import com.google.gson.Gson;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -38,6 +37,9 @@ import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
  * Created by aaditya on 3/15/18.
  */
 
+/**
+ * Popular fragment to load data into
+ */
 public class PopularFragment extends BaseFragment implements MovieViewInteractor, MovieAdapter.ItemClickListener {
 
     @Inject
@@ -57,7 +59,6 @@ public class PopularFragment extends BaseFragment implements MovieViewInteractor
     private MovieAdapter movieAdapter;
     private List<Movie> movieList;
     private MovieResponse movieResponse;
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,13 +81,10 @@ public class PopularFragment extends BaseFragment implements MovieViewInteractor
 
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
-        if (savedInstanceState != null) {
-            //probably orientation change
-            movieList = (List<Movie>) savedInstanceState.getSerializable("popularList");
-        }
-
+        // Load movie data from server.
         if (movieList == null) {
             movieList = new ArrayList<>();
+            // Check for internet connection before making api call.
             if (connectivityUtil.isConnected())
                 moviePresenter.getPopularMovies(1);
             else {
@@ -100,6 +98,8 @@ public class PopularFragment extends BaseFragment implements MovieViewInteractor
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
+
+                // Show or hide tab layout on scroll.
                 switch (newState) {
                     case SCROLL_STATE_IDLE:
                         ((MovieActivity) getActivity()).toggleTabView(View.VISIBLE);
@@ -113,6 +113,7 @@ public class PopularFragment extends BaseFragment implements MovieViewInteractor
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+                // Pagination implementation on scrolling to end of list
                 if (!(recyclerView.canScrollVertically(1))) {
                     if (movieResponse.getPage() < movieResponse.getTotal_pages()) {
                         if (!connectivityUtil.isConnected()) {
@@ -121,21 +122,11 @@ public class PopularFragment extends BaseFragment implements MovieViewInteractor
                         }
 
                         moviePresenter.getPopularMovies(movieResponse.getPage() + 1);
-
                     }
                 }
-
             }
-
         });
     }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putSerializable("popularList", (Serializable) movieList);
-    }
-
 
     @Override
     public void showProgress() {
@@ -149,6 +140,7 @@ public class PopularFragment extends BaseFragment implements MovieViewInteractor
 
     @Override
     public void onResult(MovieResponse response) {
+        // Clears list add updated data
         this.movieResponse = response;
         Set<Movie> movieSet = new HashSet<>();
         movieSet.addAll(this.movieList);
@@ -159,6 +151,7 @@ public class PopularFragment extends BaseFragment implements MovieViewInteractor
 
     }
 
+    // Loads detail activity with movie data
     @Override
     public void onMovieClicked(int position) {
         Bundle movie = new Bundle();

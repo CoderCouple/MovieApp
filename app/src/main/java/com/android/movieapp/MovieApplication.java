@@ -21,6 +21,8 @@ public class MovieApplication extends Application {
 
         // Plant Timber tree for Logging
         Timber.plant(new Timber.DebugTree());
+
+        //Load genre name from genre.json.
         GenreUtil.loadGenreMap(getApplicationContext());
     }
 

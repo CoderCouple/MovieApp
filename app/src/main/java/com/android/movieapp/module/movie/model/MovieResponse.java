@@ -1,5 +1,6 @@
 package com.android.movieapp.module.movie.model;
 
+import com.android.movieapp.data.model.Movie;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
