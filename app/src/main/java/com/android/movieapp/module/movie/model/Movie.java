@@ -1,10 +1,13 @@
 package com.android.movieapp.module.movie.model;
 
+import com.android.movieapp.module.movie.util.GenreUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by aaditya on 3/14/18.
@@ -26,6 +29,12 @@ public class Movie implements Serializable{
     private String overview;
     @Expose @SerializedName("release_date")
     private String releaseDate;
+    @Expose @SerializedName("vote_count")
+    private int vote_count;
+    @Expose @SerializedName("original_language")
+    private String language;
+    @Expose @SerializedName("backdrop_path")
+    private String backDropImage;
 
     public int getId() {
         return id;
@@ -59,10 +68,6 @@ public class Movie implements Serializable{
         this.popularity = popularity;
     }
 
-    public List<Integer> getGenres() {
-        return genres;
-    }
-
     public void setGenres(List<Integer> genres) {
         this.genres = genres;
     }
@@ -83,6 +88,30 @@ public class Movie implements Serializable{
         this.releaseDate = releaseDate;
     }
 
+    public int getVote_count() {
+        return vote_count;
+    }
+
+    public void setVote_count(int vote_count) {
+        this.vote_count = vote_count;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public String getBackDropImage() {
+        return backDropImage;
+    }
+
+    public void setBackDropImage(String backDropImage) {
+        this.backDropImage = backDropImage;
+    }
+
     @Override
     public int hashCode() {
         return id;
@@ -95,5 +124,16 @@ public class Movie implements Serializable{
         if( movie.id == id )
             flag = true;
         return flag;
+    }
+
+    public List<String> getGenres() {
+        Map<Integer, String> genreMap = GenreUtil.getGenreList();
+        List<String> genreName = new ArrayList<>();
+        for (int id : genres) {
+            if (genreMap.containsKey(id))
+                genreName.add(genreMap.get(id));
+        }
+
+        return genreName;
     }
 }

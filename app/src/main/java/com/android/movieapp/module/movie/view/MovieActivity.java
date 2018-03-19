@@ -84,4 +84,8 @@ public class MovieActivity extends BaseActivity {
             manager.beginTransaction().hide(popularFragment).commit();
     }
 
+    private void toggleView() {
+
+    }
+
 }

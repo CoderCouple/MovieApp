@@ -5,29 +5,36 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.movieapp.Config;
 import com.android.movieapp.R;
 import com.android.movieapp.module.movie.model.Movie;
+import com.google.android.flexbox.FlexboxLayout;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by aaditya on 3/15/18.
  */
 
 class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
-    @BindView(R.id.title)
-    TextView title;
+
     private Context context;
     private List<Movie> movieList;
+    private ItemClickListener itemClickListener;
 
-    public MovieAdapter(Context context, List<Movie> movieList) {
+    public MovieAdapter(Context context, List<Movie> movieList, ItemClickListener itemClickListener) {
         this.movieList = movieList;
         this.context = context;
+        this.itemClickListener = itemClickListener;
     }
 
     @Override
@@ -49,6 +56,10 @@ class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.title)
         TextView title;
+        @BindView(R.id.poster_image)
+        ImageView posterImage;
+        @BindView(R.id.movie_genres)
+        FlexboxLayout movieGenres;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -56,7 +67,42 @@ class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
         }
 
         private void bindViews(Movie movie) {
-            title.setText(movie.getTitle());
+            title.setText(movie.getTitle().trim());
+            Picasso.get()
+                    .load(Config.POSTER_BASE_PATH + movie.getPoster())
+                    .placeholder(R.drawable.poster_loading_placeholder)
+                    .error(R.drawable.poster_failed_placeholder)
+                    .into(posterImage);
+            loadGenres(movie.getGenres());
         }
+
+        private void loadGenres(List<String> genres) {
+            if (movieGenres.getChildCount() > 0)
+                movieGenres.removeAllViews();
+
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            params.setMargins(4, 4, 4, 4);
+            for (String genre : genres) {
+                TextView textView = new TextView(context);
+                textView.setText(genre);
+                textView.setPadding(3, 3, 3, 3);
+                textView.setLayoutParams(params);
+                textView.setTextSize(8);
+                textView.setTextColor(context.getResources().getColor(R.color.white));
+                textView.setBackground(context.getResources().getDrawable(R.drawable.bg_round));
+                movieGenres.addView(textView);
+            }
+        }
+
+        @OnClick(R.id.container)
+        public void onItemClick(View view) {
+            itemClickListener.onMovieClicked(getAdapterPosition());
+        }
+    }
+
+    public interface ItemClickListener {
+
+        void onMovieClicked(int position);
+
     }
 }

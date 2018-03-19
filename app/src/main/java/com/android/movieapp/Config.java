@@ -27,7 +27,11 @@ public class Config {
     //--------------------------------------------------------------------------------
     public static final String API_BASE_URL_PRODUCTION = "https://api.themoviedb.org/3/";
     public static final String API_BASE_URL_MOCK = "";
-    public static final String API_IMAGE_URL = "http://image.tmdb.org/t/p/w342/";
+
+    //Image Base url
+    public static final String POSTER_BASE_PATH = "http://image.tmdb.org/t/p/w185";
+    public static final String BACKDROP_BASE_PATH = "http://image.tmdb.org/t/p/w500";
+    
     // Active base url
     public static final String API_BASE_URL = API_BASE_URL_PRODUCTION;
 

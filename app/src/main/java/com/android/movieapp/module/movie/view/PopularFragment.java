@@ -2,6 +2,7 @@ package com.android.movieapp.module.movie.view;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -32,7 +33,7 @@ import butterknife.BindView;
  * Created by aaditya on 3/15/18.
  */
 
-public class PopularFragment extends BaseFragment implements MovieViewInteractor{
+public class PopularFragment extends BaseFragment implements MovieViewInteractor, MovieAdapter.ItemClickListener{
 
     @Inject
     MoviePresenter moviePresenter;
@@ -68,9 +69,7 @@ public class PopularFragment extends BaseFragment implements MovieViewInteractor
         Injector.component().inject(this);
         moviePresenter.attachViewInteractor(this);
 
-        // use a linear layout manager
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
         if (savedInstanceState != null) {
             //probably orientation change
@@ -82,7 +81,7 @@ public class PopularFragment extends BaseFragment implements MovieViewInteractor
             moviePresenter.getPopularMovies(1);
         }
 
-        movieAdapter = new MovieAdapter(getContext(), movieList);
+        movieAdapter = new MovieAdapter(getContext(), movieList, this);
         recyclerView.setAdapter(movieAdapter);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -123,5 +122,12 @@ public class PopularFragment extends BaseFragment implements MovieViewInteractor
         this.movieList.addAll(movieSet);
         movieAdapter.notifyDataSetChanged();
 
+    }
+
+    @Override
+    public void onMovieClicked(int position) {
+        Bundle movie = new Bundle();
+        movie.putSerializable("movie", movieList.get(position));
+        startActivity(DetailActivity.class,movie);
     }
 }
