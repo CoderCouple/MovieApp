@@ -20,11 +20,10 @@ MovieApp is an android app used to display popular and upcoming movies. You can 
  - [ButterKnife](https://github.com/JakeWharton/butterknife)
 
 ### Preview
-<p align="center">
- ![ScreenShot1](https://github.com/iamdeowanshi/MovieApp/blob/master/screenshot/img1.png)
- 
- ![ScreenShot1](https://github.com/iamdeowanshi/MovieApp/blob/master/screenshot/img2.png)
- 
- ![ScreenShot1](https://github.com/iamdeowanshi/MovieApp/blob/master/screenshot/img3.png)
-</p>
+<img width="450" align="middle" src="https://github.com/iamdeowanshi/MovieApp/blob/master/screenshot/img1.png?raw=true" alt="Popular Screen">
+
+<img width="450" align="middle" src="https://github.com/iamdeowanshi/MovieApp/blob/master/screenshot/img2.png?raw=true" alt="UpComing Screen">
+
+<img width="450" align="middle" src="https://github.com/iamdeowanshi/MovieApp/blob/master/screenshot/img3.png?raw=true" alt="Detail Screen">
+
 
