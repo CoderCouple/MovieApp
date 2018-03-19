@@ -4,6 +4,7 @@
 
     <!-- permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:name=".MovieApplication"
@@ -23,7 +24,15 @@
             </intent-filter>
         </activity>
         <activity android:name=".module.movie.view.DetailActivity"
-            android:theme="@style/Theme.Design.Light.NoActionBar"></activity>
+            android:theme="@style/Theme.Design.Light.NoActionBar"/>
+
+        <receiver android:name=".module.movie.util.NetworkChangeReceiver" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
     </application>
+
+
 
 </manifest>

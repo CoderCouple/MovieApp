@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.LayoutManager;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
 
 import com.android.movieapp.R;
@@ -54,6 +55,12 @@ public class MovieActivity extends BaseActivity {
         loadPopularMovieFragment();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
+
     public void loadPopularMovieFragment() {
         FragmentManager manager = getSupportFragmentManager();
         PopularFragment popularFragment = (PopularFragment) getSupportFragmentManager().findFragmentByTag("popular");
@@ -84,8 +91,8 @@ public class MovieActivity extends BaseActivity {
             manager.beginTransaction().hide(popularFragment).commit();
     }
 
-    private void toggleView() {
-
+    void toggleTabView(int view) {
+        navigation.setVisibility(view);
     }
 
 }

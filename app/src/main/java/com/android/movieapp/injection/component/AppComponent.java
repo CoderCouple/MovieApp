@@ -8,6 +8,7 @@ import com.android.movieapp.module.common.util.Bakery;
 import com.android.movieapp.module.common.util.ConnectivityUtil;
 import com.android.movieapp.module.common.util.PreferenceUtil;
 import com.android.movieapp.module.movie.presenter.MoviePresenterImpl;
+import com.android.movieapp.module.movie.util.NetworkChangeReceiver;
 import com.android.movieapp.module.movie.view.MovieActivity;
 import com.android.movieapp.module.movie.view.PopularFragment;
 import com.android.movieapp.module.movie.view.UpComingFragment;
@@ -39,6 +40,7 @@ public interface AppComponent {
     void inject(MovieActivity movieActivity);
     void inject(PopularFragment popularFragment);
     void inject(UpComingFragment upComingFragment);
+    void inject(NetworkChangeReceiver networkChangeReceiver);
 
 
 }

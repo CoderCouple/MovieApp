@@ -3,7 +3,6 @@ package com.android.movieapp.module.movie.view;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +12,8 @@ import android.widget.ProgressBar;
 import com.android.movieapp.R;
 import com.android.movieapp.injection.Injector;
 import com.android.movieapp.module.base.BaseFragment;
+import com.android.movieapp.module.common.util.Bakery;
+import com.android.movieapp.module.common.util.ConnectivityUtil;
 import com.android.movieapp.module.movie.model.Movie;
 import com.android.movieapp.module.movie.model.MovieResponse;
 import com.android.movieapp.module.movie.presenter.MoviePresenter;
@@ -29,16 +30,24 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 
+import static android.support.v7.widget.RecyclerView.SCROLL_STATE_DRAGGING;
+import static android.support.v7.widget.RecyclerView.SCROLL_STATE_SETTLING;
+import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
+
 /**
  * Created by aaditya on 3/15/18.
  */
 
-public class PopularFragment extends BaseFragment implements MovieViewInteractor, MovieAdapter.ItemClickListener{
+public class PopularFragment extends BaseFragment implements MovieViewInteractor, MovieAdapter.ItemClickListener {
 
     @Inject
     MoviePresenter moviePresenter;
     @Inject
     Gson gson;
+    @Inject
+    ConnectivityUtil connectivityUtil;
+    @Inject
+    Bakery bakery;
 
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
@@ -78,20 +87,46 @@ public class PopularFragment extends BaseFragment implements MovieViewInteractor
 
         if (movieList == null) {
             movieList = new ArrayList<>();
-            moviePresenter.getPopularMovies(1);
+            if (connectivityUtil.isConnected())
+                moviePresenter.getPopularMovies(1);
+            else {
+                bakery.snackLong(getView(),"Check Internet Connection");
+            }
         }
 
         movieAdapter = new MovieAdapter(getContext(), movieList, this);
         recyclerView.setAdapter(movieAdapter);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                switch (newState) {
+                    case SCROLL_STATE_IDLE:
+                        ((MovieActivity) getActivity()).toggleTabView(View.VISIBLE);
+                        break;
+                    case SCROLL_STATE_DRAGGING:
+                    case SCROLL_STATE_SETTLING:
+                        ((MovieActivity) getActivity()).toggleTabView(View.GONE);
+                }
+            }
+
+            @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 if (!(recyclerView.canScrollVertically(1))) {
-                    if (movieResponse.getPage() < movieResponse.getTotal_pages())
-                    moviePresenter.getPopularMovies(movieResponse.getPage() + 1);//TODO :change it
+                    if (movieResponse.getPage() < movieResponse.getTotal_pages()) {
+                        if (!connectivityUtil.isConnected()) {
+                            bakery.snackLong(getView(), "Check Internet Connection");
+                            return;
+                        }
+
+                        moviePresenter.getPopularMovies(movieResponse.getPage() + 1);
+
+                    }
                 }
+
             }
+
         });
     }
 
@@ -128,6 +163,6 @@ public class PopularFragment extends BaseFragment implements MovieViewInteractor
     public void onMovieClicked(int position) {
         Bundle movie = new Bundle();
         movie.putSerializable("movie", movieList.get(position));
-        startActivity(DetailActivity.class,movie);
+        startActivity(DetailActivity.class, movie);
     }
 }

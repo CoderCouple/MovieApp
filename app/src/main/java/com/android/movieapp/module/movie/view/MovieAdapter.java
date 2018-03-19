@@ -6,13 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.movieapp.Config;
 import com.android.movieapp.R;
 import com.android.movieapp.module.movie.model.Movie;
-import com.google.android.flexbox.FlexboxLayout;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -59,7 +57,7 @@ class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
         @BindView(R.id.poster_image)
         ImageView posterImage;
         @BindView(R.id.movie_genres)
-        FlexboxLayout movieGenres;
+        TextView movieGenres;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -71,27 +69,16 @@ class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
             Picasso.get()
                     .load(Config.POSTER_BASE_PATH + movie.getPoster())
                     .placeholder(R.drawable.poster_loading_placeholder)
+                    .fit()
+                    .centerCrop()
                     .error(R.drawable.poster_failed_placeholder)
                     .into(posterImage);
-            loadGenres(movie.getGenres());
+            setGenres(movie.getGenres());
+            movieGenres.setText(movie.getGenres().toString().replaceAll("[\\[.\\].\\s+]", ""));
         }
 
-        private void loadGenres(List<String> genres) {
-            if (movieGenres.getChildCount() > 0)
-                movieGenres.removeAllViews();
+        private void setGenres(List<String> genres) {
 
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-            params.setMargins(4, 4, 4, 4);
-            for (String genre : genres) {
-                TextView textView = new TextView(context);
-                textView.setText(genre);
-                textView.setPadding(3, 3, 3, 3);
-                textView.setLayoutParams(params);
-                textView.setTextSize(8);
-                textView.setTextColor(context.getResources().getColor(R.color.white));
-                textView.setBackground(context.getResources().getDrawable(R.drawable.bg_round));
-                movieGenres.addView(textView);
-            }
         }
 
         @OnClick(R.id.container)
